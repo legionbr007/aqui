@@ -386,27 +386,30 @@
     const cancelButton = document.getElementById('cancelButton');
     let textoParaCopiar = "https://ilustrious-app-ilb-2025.netlify.app/";  // Texto que será copiado
 
-    let podeCopiar = false; // Flag para controlar quando é possível copiar
-    let countdownInterval; // Para controlar a contagem regressiva
-    let countdown = 5; // Contagem inicial
+    let canCopy = false;         // Flag que indica se já passou os 5 segundos
+    let countdownInterval = null;
+    let countdown = 5;           // Contagem inicial
 
     function iniciarContagemRegressiva() {
-      if (countdownInterval) {
-        // Se já estiver em contagem, exibe a mensagem para esperar
-        navegarMessage.textContent = "Espere os 5 segundos...";
+      // Se já estiver em contagem, exibe mensagem de aviso e não reinicia
+      if (countdownInterval !== null) {
+        navegarMessage.textContent = "Espere os 5 segundos ou cancele";
         navegarMessage.style.display = "block";
         setTimeout(() => {
-          navegarMessage.style.display = "none";
+          if (!canCopy) {
+            navegarMessage.style.display = "none";
+          }
         }, 2000);
-        return; // Não reinicia a contagem
+        return;
       }
 
-      // Muda o texto do botão para o link
+      // Altera o texto do botão para o link
       navegarButton.textContent = textoParaCopiar;
-
+      // Exibe a mensagem de contagem e o botão de cancelar
+      countdown = 5; // Reinicia o contador
       navegarMessage.textContent = `Aguarde ${countdown} segundos...`;
       navegarMessage.style.display = "block";
-      cancelButton.style.display = "inline-block"; // Mostra o botão de cancelar
+      cancelButton.style.display = "block";
 
       countdownInterval = setInterval(() => {
         countdown--;
@@ -414,8 +417,8 @@
 
         if (countdown <= 0) {
           clearInterval(countdownInterval);
-          countdownInterval = null; // Reseta o intervalo
-          podeCopiar = true; // Agora o usuário pode copiar
+          countdownInterval = null;
+          canCopy = true;
           copiarTexto();
           navegarMessage.textContent = "Texto copiado!";
           setTimeout(() => {
@@ -426,43 +429,56 @@
       }, 1000);
     }
 
-    function copiarTexto() {
-      if (podeCopiar) {
-        // Usando a API Clipboard para copiar o texto
-        navigator.clipboard.writeText(textoParaCopiar)
-          .then(() => {
-            console.log("Texto copiado para a área de transferência: " + textoParaCopiar);
-          })
-          .catch(err => {
-            console.error("Erro ao copiar texto: ", err);
-          });
+    async function copiarTexto() {
+      if (canCopy) {
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(textoParaCopiar);
+            console.log("Texto copiado: " + textoParaCopiar);
+          } else {
+            // Fallback para navegadores que não suportam a API Clipboard
+            const textArea = document.createElement("textarea");
+            textArea.value = textoParaCopiar;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textArea);
+            console.log("Texto copiado via fallback: " + textoParaCopiar);
+          }
+        } catch (err) {
+          console.error("Erro ao copiar: ", err);
+          alert("Não foi possível copiar automaticamente. Por favor, copie manualmente.");
+        }
       }
     }
 
     function resetBotao() {
-      // Após o tempo de espera, o texto original do botão volta
+      // Restaura o estado original do botão
       navegarButton.textContent = "Navegar no Site...";
-      cancelButton.style.display = "none"; // Esconde o botão de cancelar
-      countdown = 5; // Resetando o contador
+      cancelButton.style.display = "none";
+      canCopy = false;
+      countdown = 5;
     }
 
-    // Impede a cópia antes dos 5 segundos
-    document.addEventListener('copy', function (e) {
-      if (!podeCopiar) {
+    // Impede a cópia manual antes dos 5 segundos
+    document.addEventListener('copy', (e) => {
+      if (!canCopy) {
         e.preventDefault();
-        navegarMessage.textContent = "Espere os 5 segundos...";
+        navegarMessage.textContent = "Espere os 5 segundos ou cancele";
         navegarMessage.style.display = "block";
         setTimeout(() => {
-          navegarMessage.style.display = "none";
+          if (!canCopy) {
+            navegarMessage.style.display = "none";
+          }
         }, 2000);
       }
     });
 
-    // Cancelar a contagem regressiva
+    // Permite cancelar a contagem
     cancelButton.addEventListener('click', () => {
       clearInterval(countdownInterval);
-      countdownInterval = null; // Reseta o intervalo
-      countdown = 5; // Resetando o contador
+      countdownInterval = null;
+      countdown = 5;
       navegarMessage.textContent = "Contagem cancelada!";
       setTimeout(() => {
         navegarMessage.style.display = "none";
