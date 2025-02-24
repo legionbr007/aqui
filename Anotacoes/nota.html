@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="nota.css">
+</head>
+<body>
+    <!-- Botão Voltar -->
+    <a href="javascript:history.back()" class="voltar-button" id="voltarButton">Voltar</a>
+
+    <div class="note-container">
+        <h2>Anotações ILB</h2>
+        
+        <!-- Área onde as notas serão exibidas -->
+        <div id="notesList" class="notes-list"></div>
+        
+        <!-- Área para inserir uma nova nota -->
+        <div id="inputContainer" class="input-container">
+          <input type="text" id="noteInput" placeholder="Digite sua nota">
+          <br>
+          <span id="errorMessage" class="error-message">Limite de 10 caracteres alcançado</span>
+          <span id="limitMessage" class="error-message">Total de notas já atingido</span>
+        </div>
+        
+        <button id="addNoteButton">Adicionar Nota</button>
+        <button id="deleteNoteButton">Apagar Nota</button>
+        <button id="changeColorButton">Mudar Cor</button>
+      </div>
+      
+      <!-- Modal para exclusão de notas -->
+      <div id="deleteContainer" class="modal-container">
+        <h3>Selecione as notas para apagar:</h3>
+        <form id="deleteForm"></form>
+        <button id="confirmDelete">Confirmar Apagar</button>
+        <button id="cancelDelete">Cancelar</button>
+      </div>
+      
+      <!-- Modal para seleção de cor -->
+      <div id="colorContainer" class="modal-container">
+        <h3>Escolha uma cor:</h3>
+        <form id="colorForm">
+            <!-- Exemplo de nova cor: Azul -->
+            <input type="radio" id="colorAzul" name="color" value="blue">
+            <label for="colorAzul">Azul</label><br>
+
+            <!-- Exemplo de nova cor: Amarela -->
+            <input type="radio" id="colorAmarela" name="color" value="yellow">
+            <label for="colorAmarela">Amarela</label><br>
+
+            <!-- Exemplo de nova cor: Preto -->
+            <input type="radio" id="colorPreto" name="color" value="black" checked>
+            <label for="colorPreto">Preto Padrão</label><br>
+
+            <!-- Exemplo de nova cor: Verde -->
+            <input type="radio" id="colorVerde" name="color" value="green">
+            <label for="colorVerde">Verde</label><br>
+
+            <!-- Exemplo de nova cor: Vermelho -->
+            <input type="radio" id="colorVermelho" name="color" value="red">
+            <label for="colorVermelho">Vermelho</label><br>
+
+            <!-- Exemplo de nova cor: Laranja -->
+            <input type="radio" id="colorLaranja" name="color" value="orange">
+            <label for="colorLaranja">Laranja</label>
+        </form>
+        <button id="confirmColor">Confirmar Cor</button>
+        <button id="cancelColor">Cancelar</button>
+      </div>
+      
+      <!-- Modal para selecionar a nota a ser customizada -->
+      <div id="selectNoteContainer" class="modal-container">
+        <h3>Selecione a nota para mudar a cor:</h3>
+        <form id="selectNoteForm"></form>
+        <button id="confirmSelectNote">Confirmar</button>
+        <button id="cancelSelectNote">Cancelar</button>
+      </div>
+    
+      <script src="nota.js"></script>
+</body>
+</html>
