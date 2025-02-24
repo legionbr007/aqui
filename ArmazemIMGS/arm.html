@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Armazém de Imagens</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .grid div {
+            width: 100px;
+            height: 100px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ccc;
+            position: relative;
+            cursor: pointer;
+        }
+        .grid img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .delete-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            color: rgb(255, 0, 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .grid div:hover .delete-overlay {
+            opacity: 1;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        #downloadNameInput {
+            margin-top: 10px;
+        }
+        .image-number {
+            /*position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: rgb(0, 0, 0);
+            padding: 2px 5px;
+            font-size: 12px;*/
+            position: absolute;
+            /*top: 3px;
+            right: 3px;*/
+            background-color: rgba(0, 0, 0, 0.7);
+            color: rgb(0, 0, 0); /* Cor do número */
+            padding: 1px; /* Reduz o espaço interno */
+            font-size: 0px 4px; /* Reduz o tamanho do número */
+            width: 12%; /* Largura do quadrado */
+            height: 12%; /* Altura do quadrado */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 12px; /* Ajusta o alinhamento do número */
+            border-radius: 50px; /* Opcional, arredonda um pouco */
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+        }
+        .modal input {
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+            padding: 5px;
+        }
+        .modal button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Armazém de Imagens</h2>
+        <input type="file" id="imageInput" accept="image/*" hidden>
+        <button onclick="document.getElementById('imageInput').click()">Adicionar Imagem</button>
+        <div class="button-container">
+            <button onclick="enableDownload()">Baixar Imagem</button>
+        </div>
+        <div class="grid" id="imageGrid">
+            <!-- Espaços reservados para imagens -->
+        </div>
+    </div>
+
+    <!-- Modal para selecionar o número da imagem -->
+    <div id="downloadModal" class="modal">
+        <h3>Selecione o número do stock que queira baixar</h3>
+        <input type="number" id="selectedImageNumber" min="1" max="20" placeholder="Número da imagem" />
+        <button onclick="confirmImageSelection()">Confirmar Seleção</button>
+        <button onclick="cancelDownload()">Cancelar</button>
+    </div>
+
+    <!-- Modal para inserir o nome da imagem -->
+    <div id="nameModal" class="modal">
+        <h3>Coloque o nome para a imagem</h3>
+        <input type="text" id="downloadNameInput" placeholder="Nome para a imagem" />
+        <button onclick="confirmDownload()">Confirmar Download</button>
+        <button onclick="cancelDownload()">Cancelar</button>
+    </div>
+
+    <script>
+        const maxImages = 20;
+        const imageGrid = document.getElementById("imageGrid");
+        const imageInput = document.getElementById("imageInput");
+        let images = JSON.parse(localStorage.getItem("storedImages")) || [];
+        let selectedImageIndex = null;
+
+        function renderImages() {
+            imageGrid.innerHTML = "";
+            for (let i = 0; i < maxImages; i++) {
+                let div = document.createElement("div");
+                if (images[i]) {
+                    let img = document.createElement("img");
+                    img.src = images[i];
+                    div.appendChild(img);
+
+                    let imageNumber = document.createElement("div");
+                    imageNumber.classList.add("image-number");
+                    imageNumber.innerText = i + 1;
+                    div.appendChild(imageNumber);
+
+                    let overlay = document.createElement("div");
+                    overlay.classList.add("delete-overlay");
+                    overlay.innerText = "X";
+                    overlay.onclick = function () {
+                        deleteImage(i);
+                    };
+                    div.appendChild(overlay);
+                }
+                imageGrid.appendChild(div);
+            }
+        }
+
+        function addImage(event) {
+            if (images.length >= maxImages) {
+                alert("Limite de 20 imagens atingido!");
+                return;
+            }
+            let file = event.target.files[0];
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    images.push(e.target.result);
+                    localStorage.setItem("storedImages", JSON.stringify(images));
+                    renderImages();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function deleteImage(index) {
+            images.splice(index, 1);
+            localStorage.setItem("storedImages", JSON.stringify(images));
+            renderImages();
+        }
+
+        function enableDownload() {
+            if (images.length === 0) {
+                alert("Nenhuma foto adicionada!");
+                return;
+            }
+            document.getElementById("downloadModal").style.display = "block";
+        }
+
+        function confirmImageSelection() {
+            const imageNumber = parseInt(document.getElementById("selectedImageNumber").value, 10);
+            if (isNaN(imageNumber) || imageNumber < 1 || imageNumber > images.length) {
+                alert("Por favor, selecione um número válido!");
+                return;
+            }
+
+            selectedImageIndex = imageNumber - 1;
+            document.getElementById("downloadModal").style.display = "none";
+            document.getElementById("nameModal").style.display = "block";
+        }
+
+        function confirmDownload() {
+            const name = document.getElementById("downloadNameInput").value.trim();
+            if (!name) {
+                alert("Por favor, insira um nome para a imagem!");
+                return;
+            }
+
+            const imageData = images[selectedImageIndex];
+            const link = document.createElement("a");
+            link.href = imageData;
+            link.download = name + ".png";
+            link.click();
+
+            cancelDownload();
+        }
+
+        function cancelDownload() {
+            document.getElementById("downloadModal").style.display = "none";
+            document.getElementById("nameModal").style.display = "none";
+            document.getElementById("selectedImageNumber").value = "";
+            document.getElementById("downloadNameInput").value = "";
+        }
+
+        imageInput.addEventListener("change", addImage);
+        renderImages();
+    </script>
+</body>
+</html>
