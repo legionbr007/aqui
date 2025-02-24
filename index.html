@@ -236,6 +236,33 @@
   </style>
 
 <style>
+  /* Ícone de atualização fixo no canto superior direito */
+  .refresh-icon {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 36px;
+    color: #008CBA;
+    user-select: none;
+  }
+  .refresh-icon:hover {
+    opacity: 0.8;
+  }
+  /* Animação de rotação */
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  /* Classe para aplicar a rotação */
+  .rotating {
+    animation: rotate 1s linear infinite;
+  }
+</style>
+
+<style>
   /* Estilo do botão de navegação */
   .navegar-container {
     text-align: center;
@@ -456,6 +483,22 @@
       </div>
     </div>
   </div>
+
+  <!-- Ícone de atualização -->
+  <div id="refreshIcon" class="refresh-icon" title="Atualizar Página">&#x21bb;</div>
+
+  <script>
+    const refreshIcon = document.getElementById('refreshIcon');
+    
+    refreshIcon.addEventListener('click', function() {
+      // Adiciona a classe de rotação
+      refreshIcon.classList.add('rotating');
+      // Aguarda 500ms para que a animação seja vista e recarrega a página
+      setTimeout(() => {
+        location.reload();
+      }, 500);
+    });
+  </script>
 
   <script>
     const door = document.getElementById('door');
