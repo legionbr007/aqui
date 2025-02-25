@@ -94,7 +94,7 @@ body {
 
 .voltar-button {
   position: absolute;
-  bottom: 20px;
+  bottom: 70px;
   left: 20px;
   padding: 15px 30px;
   font-size: 18px;
@@ -166,6 +166,25 @@ body {
 }
 
 /*Sistema de Rolagem*/
+
+/* Sistema de Rolagem */
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  overflow-y: auto;
+}
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #ff0000;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #ff0000;
+}
 
 /* Garantir que a página ocupe 100% da altura da janela */
 html, body {
