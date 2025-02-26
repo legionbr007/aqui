@@ -1,629 +1,313 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inicial ILB</title>
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    /* Estilo existente */
-    .texto {
-      font-size: 2em;
-      animation: texto1 1s ease-in-out infinite;
-      background-color: yellow;
-      width: 500px;
-      height: 55px;
-      padding: 10px;
-      text-align: center;
-      margin: 0 auto;
-    }
-    @keyframes texto1 {
-      0%, 100% {
-        transform: rotateZ(0deg);
-      }
-      50% {
-        transform: rotateZ(5deg);
-      }
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro e Login</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="horas.js"></script> <!-- Corrigido para o arquivo JS correto -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/material-icons@1.13.12/iconfont/material-icons.min.css">
+    <style>
+        /* Resetando a margem e preenchimento do body */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
 
-    /* Botões com RGB */
-    .button-container {
-      text-align: center;
-      margin-bottom: 30px;
-      display: flex;
-      flex-direction: column; /* Vai empilhar os botões e a porta verticalmente */
-      align-items: center; /* Centraliza os itens */
-    }
-    .timer-button {
-      display: inline-block;
-      margin: 10px;
-      padding: 10px 20px;
-      background-color: #ff6347; /* Cor de fundo RGB para o botão */
-      text-decoration: none;
-      border: 2px solid #ff4500; /* Cor do contorno RGB para o botão */
-      border-radius: 5px;
-      color: white;
-      font-weight: bold;
-      box-shadow: 0 0 10px rgba(255, 99, 71, 0.7); /* Efeito de sombra RGB */
-      transition: all 0.3s ease;
-    }
-    .timer-button:hover {
-      background-color: #ff4500; /* Cor de fundo ao passar o mouse */
-      border-color: #ff6347;
-      box-shadow: 0 0 15px rgba(255, 69, 0, 0.8);
-    }
-    /* -------------------------------- */
-    /* Sistema de Porta - estilos */
-    .door-container {
-      position: relative;
-      width: 100px;
-      height: 200px;
-      margin: 20px auto; /* Centraliza a porta */
-    }
-    .door {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      background-color: #b5651d;
-      border: 2px solid #8b4513;
-      border-radius: 4px;
-      transform-origin: left center;
-      transition: transform 3s ease-in-out;
-    }
-    .door.open {
-      transform: rotateY(-90deg);
-    }
-    .handle {
-      position: absolute;
-      right: 6px;
-      top: 50%;
-      width: 8px;
-      height: 8px;
-      background-color: gold;
-      border-radius: 50%;
-      transform: translateY(-50%);
-      box-shadow: 0 0 5px rgba(0,0,0,0.5);
-    }
-    .window {
-      position: absolute;
-      top: 20%;
-      left: 50%;
-      width: 20px;
-      height: 30px;
-      background-color: rgba(255, 255, 255, 0.5);
-      border: 1px solid #ccc;
-      transform: translateX(-50%);
-    }
-    .message {
-      position: absolute;
-      top: -30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: rgba(0,0,0,0.7);
-      color: #fff;
-      padding: 5px 10px;
-      border-radius: 5px;
-      font-size: 0.8em;
-      opacity: 0;
-      transition: opacity 0.5s;
-      white-space: nowrap;
-    }
-    .message.show {
-      opacity: 1;
-    }
-    /* Botão de cancelar (X) */
-    .cancel-btn {
-      position: absolute;
-      top: -10px;
-      right: -25px;
-      background-color: red;
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      font-size: 14px;
-      line-height: 20px;
-      text-align: center;
-      cursor: pointer;
-      opacity: 0;
-      transition: opacity 0.5s;
-    }
-    .cancel-btn.show {
-      opacity: 1;
-    }
+        /* Barra de navegação */
+        nav {
+            background-color: #333;
+            padding: 10px 0;
+            color: white;
+            text-align: center;
+        }
 
-    /* Texto dentro da porta */
-    .door-text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      width: 100%;
-    }
-    .text-ceo {
-      font-size: 16px;
-      font-weight: bold;
-      color: white;
-    }
-    .text-redes {
-      font-size: 14px;
-      color: white;
-    }
+        nav .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
 
-    /* Estilo da lâmpada e botão de ligar/desligar */
-    .lamp-container {
-      position: relative;
-      margin-top: 10px;
-      margin-bottom: 40px;
-      text-align: center;
-    }
-    .lamp {
-      font-size: 50px; /* Tamanho do ícone da lâmpada */
-      transform: rotate(180deg); /* Coloca a lâmpada de ponta cabeça */
-      cursor: pointer;
-      transition: transform 0.3s ease-in-out;
-    }
-    .lamp-button {
-      position: absolute;
-      top: 70px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: #333;
-      color: white;
-      border: none;
-      padding: 5px;
-      border-radius: 50%;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    .lamp-button:hover {
-      background-color: #444;
-    }
+        /* Navbar Links */
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
 
-    /* Efeito de luz ao ligar a lâmpada */
-    .light-effect {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(255, 255, 0, 0.2);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s;
-    }
-    .light-effect.show {
-      opacity: 1;
-    }
+        nav ul li {
+            margin: 0 15px;
+        }
 
-    /* Rodapé com o texto de Direitos Autorais */
-    .footer {
-      text-align: center;
-      font-size: 12px;
-      color: white;
-      margin-top: 10px;
-      /*position: fixed;*/
-      bottom: 0;
-      transform: none; /* Remove o deslocamento */
-      transform: translateX(-1%);
-      width: auto;
-    }
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+        }
 
-    /* Efeito RGB no texto de direitos autorais */
-    .footer-text {
-      font-size: 14px;
-      font-weight: normal;
-      animation: rgbEffect 2s linear infinite;
-    }
+        nav ul li a:hover, .active {
+            text-decoration: underline;
+        }
 
-    @keyframes rgbEffect {
-      0% {
-        color: red;
-      }
-      33% {
-        color: green;
-      }
-      66% {
-        color: blue;
-      }
-      100% {
-        color: red;
-      }
-    }
+        /* Centralização dos formulários */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
 
-    /* Mensagem de manutenção em botões */
-    .modal {
-    display: none; /* Garante que o modal não aparece ao carregar a página */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-  }
+        .form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
 
-  .modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-  }
-  </style>
+        .form h6 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
 
-<style>
-  /* Ícone de atualização fixo no canto superior direito */
-  .refresh-icon {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    font-size: 36px;
-    color: #008CBA;
-    user-select: none;
-  }
-  .refresh-icon:hover {
-    opacity: 0.8;
-  }
-  /* Animação de rotação */
-  @keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-  /* Classe para aplicar a rotação */
-  .rotating {
-    animation: rotate 1s linear infinite;
-  }
-</style>
+        .form-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
 
-<style>
-  /* Estilo do botão de navegação */
-  .navegar-container {
-    text-align: center;
-    margin-top: 50px;
-    position: relative;
-  }
+        .form-style {
+            width: 100%;
+            padding: 10px;
+            padding-left: 40px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
 
-  .navegar-message {
-    font-size: 14px;
-    font-weight: bold;
-    color: red;
-    margin-bottom: 10px;
-    display: none;
-  }
+        .input-icon {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            font-size: 20px;
+            color: #333;
+        }
 
-  .navegar-button {
-    white-space: nowrap;
-    margin-left: -30px;
-    background-color: #008CBA;
-    color: white;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    transition: background-color 0.3s;
-  }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
 
-  .navegar-button:hover {
-    background-color: #005f7f;
-  }
+        .btn:hover {
+            background-color: #555;
+        }
 
-  /* X de cancelar */
-  .cancel-button {
-    position: absolute;
-    top: 10px; /* Ajustado para ficar um pouco para cima */
-    right: 120px; /* Ajustado para ficar bem encostado ao botão */
-    background-color: red;
-    color: white;
-    border: none;
-    font-size: 16px;
-    padding: 5px 10px;
-    border-radius: 50%;
-    cursor: pointer;
-  }
+        .error-message {
+            color: red;
+            display: none;
+            text-align: center;
+            margin-bottom: 10px;
+        }
 
-  .copied-text {
-    font-size: 16px;
-    margin-top: 10px;
-    color: green;
-    font-weight: bold;
-  }
-</style>
+        /* Barra Fixa Inferior */
+        .fixed-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            z-index: 1000;
+        }
+
+        .fixed-bar a {
+            color: white;
+            font-size: 30px;
+            text-decoration: none;
+        }
+
+        .settings-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .settings-content {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .settings-content h3 {
+            margin-bottom: 20px;
+            color: rgb(0, 0, 0);
+        }
+
+        /* Estilos do botão de apagar dados */
+        .settings-content button {
+            padding: 10px;
+            background-color: red; /* Cor de fundo vermelha */
+            color: white; /* Texto branco */
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+
+        .settings-content button:hover {
+            background-color: darkred; /* Efeito hover em vermelho mais escuro */
+        }
+
+        .social-media a {
+            color: var(--mainColor); /* Mudando a cor do ícone (casinha) */
+            margin-right: 22px;
+            font-size: 22px;
+            text-decoration: none;
+            transition: all .2s linear;
+        }
+
+        .social-media a:hover {
+            color: var(--white);  /* Cor ao passar o mouse */
+        }
+    </style>
 </head>
 <body>
-  <div class="button-container">
-    <div class="lamp-container">
-      <!-- Lâmpada (ícone real) -->
-      <div class="lamp" id="lamp">💡</div>
-      <!-- Botão para ligar/desligar -->
-      <button class="lamp-button" id="lampButton">⚡</button>
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">Ilustrious <span>Legion</span><text> BR</text></div>
+        <ul>
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="#">Sobre</a></li>
+            <li><a href="#">Serviços</a></li>
+            <li><a href="#">Galeria</a></li>
+            <li><a href="#">Feedback</a></li>
+        </ul>
+    </nav>
+
+    <!-- Formulário de Login/Registro -->
+    <section>
+        <div class="container">
+            <div class="form">
+                <div class="text-center">
+                    <h6><span>LOGAR-SE</span> <span>REGISTRAR-SE</span></h6>
+                    <input type="checkbox" class="checkbox" id="reg-log">
+                    <label for="reg-log"></label>
+                    <div class="card-3d-wrap">
+                        <div class="card-3d-wrapper">
+                            <!-- Login Form -->
+                            <div class="card-front">
+                                <div class="center-wrap">
+                                    <h4 class="heading">LOGAR-SE</h4>
+                                    <div class="form-group">
+                                        <input type="email" class="form-style" id="login-email" placeholder="Seu Email" autocomplete="off">
+                                        <i class="input-icon material-icons">alternate_email</i>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input type="password" class="form-style" id="login-password" placeholder="Sua Senha" autocomplete="off">
+                                        <i class="input-icon material-icons">lock</i>
+                                    </div>
+
+                                    <!-- Mensagens de erro para o Login -->
+                                    <div id="login-email-error" class="error-message">Este email não existe...</div>
+                                    <div id="login-password-error" class="error-message">Email ou senha incorretos.</div>
+                                    <div id="login-blank-error" class="error-message">Campo acima em branco.</div>
+
+                                    <a href="tela1.html" class="btn" id="submit-login">Login</a>                               
+                                    <a href="#" class="link" id="forgotPasswordLink">Esqueceu sua senha?</a>
+                                </div>
+                            </div>
+
+                            <!-- Registro Form -->
+                            <div class="card-back">
+                                <div class="center-wrap">
+                                    <h4 class="heading">Registrar-se</h4>
+                                    <div class="form-group">
+                                        <input type="text" class="form-style" id="register-name" placeholder="Seu Nome" autocomplete="off">
+                                        <i class="input-icon material-icons">perm_identity</i>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input type="email" class="form-style" id="register-email" placeholder="Seu Email" autocomplete="off">
+                                        <i class="input-icon material-icons">alternate_email</i>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input type="password" class="form-style" id="register-password" placeholder="Sua Senha" autocomplete="off">
+                                        <i class="input-icon material-icons">lock</i>
+                                    </div>
+
+                                    <!-- Mensagens de erro para Register -->
+                                    <p id="register-email-error" class="error-message">Este email já está registrado.</p>
+                                    <p id="register-password-error" class="error-message">Você precisa colocar uma senha com no mínimo 4 caracteres.</p>
+                                    <p id="register-email-invalid-error" class="error-message">Coloque um email válido, ex: blablabla@gmail.com.</p>
+
+                                    <a href="#" class="btn" id="submit-register">Register</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </section>
+
+    <!-- Barra Fixa Inferior -->
+    <div class="fixed-bar">
+        <a href="index.html" id="home-icon"><i class="material-icons">home</i></a>
+        <a href="#" id="settings-icon"><i class="material-icons">settings</i></a>
     </div>
 
-    <!-- Texto exibido -->
-    <div class="texto">Opções abaixo...</div>
-    <br><br>
-    <!-- Botões -->
-    <a href="Timers/Minutos/minutos.html" class="timer-button" id="timerButton1">⏳ Timer Minutos ⏳</a>
-    <a href="#" class="timer-button" id="timerButton2">⏳ Timer Cronômetro ⏳</a>
-    <a href="Anotacoes/nota.html" class="timer-button" id="timerButton3">📝 Bloco de Notas 📝</a>
-    <a href="/ArmazemIMGS/arm.html" class="timer-button" id="timerButton4">📁 Armazenar IMGS 📁</a>
-
-    <!-- Sistema da Porta -->
-    <div class="door-container" id="doorSection">
-      <div class="door" id="door">
-        <div class="handle"></div>
-        <div class="window"></div>
-        <!-- Texto dentro da porta -->
-        <div class="door-text">
-          <span class="text-ceo">CEO Site</span>
-          <span class="text-redes">Redes</span>
+    <!-- Tela de Configurações -->
+    <div class="settings-screen" id="settings-screen">
+        <div class="settings-content">
+            <h3>Configurações</h3>
+            <button id="clear-data">Apagar Dados do Usuário</button>
         </div>
-      </div>
-      <button class="cancel-btn" id="cancelBtn">X</button>
-      <div class="message" id="message">Abrindo porta...</div>
-
-      <!-- Começa: Navegar no site -->
-      <!----------------------------->
-      <!----------------------------->
-      <!----------------------------->
-      <!----------------------------->
-      <!----------------------------->
-      <!----------------------------->
-      <!----------------------------->
-      <!----------------------------->
-      <!----------------------------->
-      <!----------------------------->
-      <!----------------------------->
-      <!----------------------------->
-      <!----------------------------->
-      <!----------------------------->
-      <!----------------------------->
-      <!----------------------------->
-      <!----------------------------->
-      <!----------------------------->
-      <!----------------------------->
-      <!----------------------------->
-      <!----------------------------->
-
-            <!-- Modal -->
-      <div id="manutencaoModal" class="modal">
-        <div class="modal-content">
-          <p>Opção em manutenção...</p>
-          <button id="fecharModal">OK</button>
-        </div>
-      </div>
-
-
-        <!-- Botão Navegar -->
-  <div class="navegar-container">
-    <div id="navegarMessage" class="navegar-message"></div>
-    <button id="navegarButton" class="navegar-button">Navegar no Site...</button>
-    <!-- Botão de Cancelar -->
-    <button id="cancelButton" class="cancel-button" style="display: none;">X</button>
-  </div>
-
-  <script>
-    const navegarButton = document.getElementById('navegarButton');
-    const navegarMessage = document.getElementById('navegarMessage');
-    const cancelButton = document.getElementById('cancelButton');
-    let textoParaCopiar = "https://ilustrious-app-ilb-2025.netlify.app/";  // Texto que será copiado
-
-    let canCopy = false;         // Flag que indica se já passou os 5 segundos
-    let countdownInterval = null;
-    let countdown = 5;           // Contagem inicial
-
-    function iniciarContagemRegressiva() {
-      // Se já estiver em contagem, exibe mensagem de aviso e não reinicia
-      if (countdownInterval !== null) {
-        navegarMessage.textContent = "Espere os 5 segundos ou cancele";
-        navegarMessage.style.display = "block";
-        setTimeout(() => {
-          if (!canCopy) {
-            navegarMessage.style.display = "none";
-          }
-        }, 2000);
-        return;
-      }
-
-      // Altera o texto do botão para o link
-      navegarButton.textContent = textoParaCopiar;
-      // Exibe a mensagem de contagem e o botão de cancelar
-      countdown = 5; // Reinicia o contador
-      navegarMessage.textContent = `Aguarde ${countdown} segundos...`;
-      navegarMessage.style.display = "block";
-      cancelButton.style.display = "block";
-
-      countdownInterval = setInterval(() => {
-        countdown--;
-        navegarMessage.textContent = `Aguarde ${countdown} segundos...`;
-
-        if (countdown <= 0) {
-          clearInterval(countdownInterval);
-          countdownInterval = null;
-          canCopy = true;
-          copiarTexto();
-          navegarMessage.textContent = "Texto copiado!";
-          setTimeout(() => {
-            navegarMessage.style.display = "none";
-            resetBotao();
-          }, 2000);
-        }
-      }, 1000);
-    }
-
-    async function copiarTexto() {
-      if (canCopy) {
-        try {
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            await navigator.clipboard.writeText(textoParaCopiar);
-            console.log("Texto copiado: " + textoParaCopiar);
-          } else {
-            // Fallback para navegadores que não suportam a API Clipboard
-            const textArea = document.createElement("textarea");
-            textArea.value = textoParaCopiar;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand("copy");
-            document.body.removeChild(textArea);
-            console.log("Texto copiado via fallback: " + textoParaCopiar);
-          }
-        } catch (err) {
-          console.error("Erro ao copiar: ", err);
-          alert("Não foi possível copiar automaticamente. Por favor, copie manualmente.");
-        }
-      }
-    }
-
-    function resetBotao() {
-      // Restaura o estado original do botão
-      navegarButton.textContent = "Navegar no Site...";
-      cancelButton.style.display = "none";
-      canCopy = false;
-      countdown = 5;
-    }
-
-    // Impede a cópia manual antes dos 5 segundos
-    document.addEventListener('copy', (e) => {
-      if (!canCopy) {
-        e.preventDefault();
-        navegarMessage.textContent = "Espere os 5 segundos ou cancele";
-        navegarMessage.style.display = "block";
-        setTimeout(() => {
-          if (!canCopy) {
-            navegarMessage.style.display = "none";
-          }
-        }, 2000);
-      }
-    });
-
-    // Permite cancelar a contagem
-    cancelButton.addEventListener('click', () => {
-      clearInterval(countdownInterval);
-      countdownInterval = null;
-      countdown = 5;
-      navegarMessage.textContent = "Contagem cancelada!";
-      setTimeout(() => {
-        navegarMessage.style.display = "none";
-        resetBotao();
-      }, 2000);
-    });
-
-    navegarButton.addEventListener('click', iniciarContagemRegressiva);
-  </script>
-    
-        <!-- Rodapé dentro da div de botões -->
-        <div class="footer">
-          <div class="footer-text">
-            <br>
-            © 2025 Direitos autorais reservados.
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
 
-  <!-- Ícone de atualização -->
-  <div id="refreshIcon" class="refresh-icon" title="Atualizar Página">&#x21bb;</div>
+    <!-- Script JS -->
+    <script src="script.js"></script>
+    <script>
+        // Exibir tela de configurações ao clicar no ícone de configurações
+        document.getElementById("settings-icon").addEventListener("click", function () {
+            document.getElementById("settings-screen").style.display = "flex";
+        });
 
-  <script>
-    const refreshIcon = document.getElementById('refreshIcon');
-    
-    refreshIcon.addEventListener('click', function() {
-      // Adiciona a classe de rotação
-      refreshIcon.classList.add('rotating');
-      // Aguarda 500ms para que a animação seja vista e recarrega a página
-      setTimeout(() => {
-        location.reload();
-      }, 500);
-    });
-  </script>
+        // Fechar a tela de configurações se clicar fora da área de conteúdo
+        document.getElementById("settings-screen").addEventListener("click", function (event) {
+            if (event.target === this) {
+                this.style.display = "none";
+            }
+        });
 
-  <script>
-    const door = document.getElementById('door');
-    const message = document.getElementById('message');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const lamp = document.getElementById('lamp');
-    const lampButton = document.getElementById('lampButton');
-    const lightEffect = document.createElement('div');
-    lightEffect.classList.add('light-effect');
-    document.body.appendChild(lightEffect);
-
-    let doorTimeout = null;
-    let lightOn = localStorage.getItem('lightState') === 'on'; // Recupera o estado da luz no carregamento
-
-    // Função de ligar/desligar luz
-    function toggleLight() {
-      lightOn = !lightOn;
-      localStorage.setItem('lightState', lightOn ? 'on' : 'off'); // Salva o estado no localStorage
-      if (lightOn) {
-        lamp.style.transform = 'rotate(180deg)'; // Efeito de giro ao ligar
-        lightEffect.classList.add('show');
-      } else {
-        lamp.style.transform = 'rotate(0deg)'; // Efeito de giro ao desligar
-        lightEffect.classList.remove('show');
-      }
-    }
-
-    // Restaura o estado da lâmpada quando o site for recarregado
-    if (lightOn) {
-      lightEffect.classList.add('show');
-      lamp.style.transform = 'rotate(180deg)';
-    }
-
-    // Ao clicar no botão da lâmpada, alterna o estado da luz
-    lampButton.addEventListener('click', () => {
-      toggleLight();
-    });
-
-    // Função para abrir a porta
-    function openDoor() {
-      message.textContent = "Abrindo porta...";
-      message.classList.add('show');
-      door.classList.add('open');
-      cancelBtn.classList.add('show');
-
-      // Define redirecionamento após 3 segundos
-      doorTimeout = setTimeout(() => {
-        message.classList.remove('show');
-        // Redireciona para o link desejado
-        window.location.href = '#'; // Substitua '#' pelo link desejado
-      }, 3000);
-    }
-
-    // Função para fechar a porta
-    function closeDoor() {
-      clearTimeout(doorTimeout);
-      message.textContent = "Porta se fechando...";
-      message.classList.add('show');
-      door.classList.remove('open');
-      cancelBtn.classList.remove('show');
-
-      // Após 3 segundos, oculta a mensagem
-      setTimeout(() => {
-        message.classList.remove('show');
-      }, 3000);
-    }
-
-    // Ao clicar na porta, inicia a abertura (caso não esteja já aberta)
-    door.addEventListener('click', () => {
-      if (!door.classList.contains('open')) {
-        openDoor();
-      }
-    });
-
-    // Ao clicar no botão de cancelar, fecha a porta
-    cancelBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      closeDoor();
-    });
-  </script>
-  <script src="script.js"></script>
+        // Apagar dados do usuário
+        document.getElementById("clear-data").addEventListener("click", function () {
+            localStorage.removeItem("users");
+            alert("Dados do usuário apagados!");
+            document.getElementById("settings-screen").style.display = "none";
+        });
+    </script>
 </body>
 </html>
