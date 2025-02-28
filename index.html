@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro e Login</title>
     <link rel="stylesheet" href="style.css">
-    <script src="horas.js"></script> <!-- Corrigido para o arquivo JS correto -->
+    <script src="horas.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/material-icons@1.13.12/iconfont/material-icons.min.css">
     <style>
-        /* Resetando a margem e preenchimento do body */
         body {
             margin: 0;
             padding: 0;
@@ -17,7 +17,6 @@
             background-color: #f0f0f0;
         }
 
-        /* Barra de navegação */
         nav {
             background-color: #333;
             padding: 10px 0;
@@ -30,7 +29,6 @@
             font-weight: bold;
         }
 
-        /* Navbar Links */
         nav ul {
             list-style: none;
             padding: 0;
@@ -48,11 +46,11 @@
             font-size: 18px;
         }
 
-        nav ul li a:hover, .active {
+        nav ul li a:hover,
+        .active {
             text-decoration: underline;
         }
 
-        /* Centralização dos formulários */
         .container {
             display: flex;
             justify-content: center;
@@ -119,7 +117,6 @@
             margin-bottom: 10px;
         }
 
-        /* Barra Fixa Inferior */
         .fixed-bar {
             position: fixed;
             bottom: 0;
@@ -147,6 +144,7 @@
             bottom: 0;
             background-color: rgba(0, 0, 0, 0.8);
             z-index: 999;
+            display: flex;
             justify-content: center;
             align-items: center;
         }
@@ -164,11 +162,10 @@
             color: rgb(0, 0, 0);
         }
 
-        /* Estilos do botão de apagar dados */
         .settings-content button {
             padding: 10px;
-            background-color: red; /* Cor de fundo vermelha */
-            color: white; /* Texto branco */
+            background-color: red;
+            color: white;
             border: none;
             cursor: pointer;
             border-radius: 5px;
@@ -176,34 +173,97 @@
         }
 
         .settings-content button:hover {
-            background-color: darkred; /* Efeito hover em vermelho mais escuro */
+            background-color: darkred;
+        }
+
+        .success-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-content {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .success-content h3 {
+            margin-bottom: 20px;
+            color: rgb(0, 0, 0);
         }
 
         .social-media a {
-            color: var(--mainColor); /* Mudando a cor do ícone (casinha) */
+            color: var(--mainColor);
             margin-right: 22px;
             font-size: 22px;
             text-decoration: none;
-            transition: all .2s linear;
+            transition: all 0.2s linear;
         }
 
         .social-media a:hover {
-            color: var(--white);  /* Cor ao passar o mouse */
+            color: var(--branco);
+        }
+    </style>
+    <style>
+        #ok-button {
+            padding: 10px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 18px;
+            background: rgb(255, 0, 0);
+            background: linear-gradient(45deg, rgb(255, 0, 0), rgb(0, 255, 0), rgb(0, 0, 255));
+            background-size: 400% 400%;
+            animation: rgb-motion 5s linear infinite;
+            transition: all 0.3s ease;
+        }
+    
+        /* Animação RGB de transição suave das cores */
+        @keyframes rgb-motion {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    
+        #ok-button:hover {
+            filter: brightness(1.2); /* Aumenta a intensidade de cor ao passar o mouse */
         }
     </style>
 </head>
+
 <body>
     <!-- Navbar -->
     <nav>
-        <div class="logo">Ilustrious <span>Legion</span><text> BR</text></div>
+        <div class="logo">Ilustre <span>Legião</span><text> BR</text></div>
         <ul>
-            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="index.html" class="active">Início</a></li>
             <li><a href="#">Sobre</a></li>
             <li><a href="#">Serviços</a></li>
             <li><a href="#">Galeria</a></li>
             <li><a href="#">Feedback</a></li>
         </ul>
     </nav>
+
+    <!-- Botão Voltar -->
+    <a href="javascript:history.back()" class="voltar-button" id="voltarButton">Voltar</a>
 
     <!-- Formulário de Login/Registro -->
     <section>
@@ -215,99 +275,192 @@
                     <label for="reg-log"></label>
                     <div class="card-3d-wrap">
                         <div class="card-3d-wrapper">
-                            <!-- Login Form -->
+                            <!-- Formulário de Login -->
                             <div class="card-front">
                                 <div class="center-wrap">
                                     <h4 class="heading">LOGAR-SE</h4>
                                     <div class="form-group">
-                                        <input type="email" class="form-style" id="login-email" placeholder="Seu Email" autocomplete="off">
+                                        <input type="email" class="form-style" id="login-email" placeholder="Seu Email"
+                                            autocomplete="off">
                                         <i class="input-icon material-icons">alternate_email</i>
                                     </div>
-
                                     <div class="form-group">
-                                        <input type="password" class="form-style" id="login-password" placeholder="Sua Senha" autocomplete="off">
+                                        <input type="password" class="form-style" id="login-password" placeholder="Sua Senha"
+                                            autocomplete="off">
                                         <i class="input-icon material-icons">lock</i>
                                     </div>
-
-                                    <!-- Mensagens de erro para o Login -->
-                                    <div id="login-email-error" class="error-message">Este email não existe...</div>
-                                    <div id="login-password-error" class="error-message">Email ou senha incorretos.</div>
-                                    <div id="login-blank-error" class="error-message">Campo acima em branco.</div>
-
-                                    <a href="tela1.html" class="btn" id="submit-login">Login</a>                               
+                                    <!-- Mensagens de erro e sucesso para Login -->
+                                    <div id="login-error-message" class="error-message">Campo acima em branco.</div>
+                                    <div id="login-password-error-message" class="error-message">A senha deve ter entre 4 e 10 caracteres!</div>
+                                    <div id="login-email-error-message" class="error-message">O email deve ser do tipo @gmail.com</div>
+                                    <div id="login-general-error-message" class="error-message">Email ou senha inválidos!</div>
+                                    <div id="login-success-message" class="error-message"></div>
+                                    <a href="#" class="btn" id="submit-login">Login</a>
                                     <a href="#" class="link" id="forgotPasswordLink">Esqueceu sua senha?</a>
                                 </div>
                             </div>
-
-                            <!-- Registro Form -->
+                            <!-- Formulário de Registro -->
                             <div class="card-back">
                                 <div class="center-wrap">
                                     <h4 class="heading">Registrar-se</h4>
                                     <div class="form-group">
-                                        <input type="text" class="form-style" id="register-name" placeholder="Seu Nome" autocomplete="off">
+                                        <input type="text" class="form-style" id="register-name" placeholder="Seu Nome"
+                                            autocomplete="off">
                                         <i class="input-icon material-icons">perm_identity</i>
                                     </div>
-
                                     <div class="form-group">
-                                        <input type="email" class="form-style" id="register-email" placeholder="Seu Email" autocomplete="off">
+                                        <input type="email" class="form-style" id="register-email" placeholder="Seu Email"
+                                            autocomplete="off">
                                         <i class="input-icon material-icons">alternate_email</i>
                                     </div>
-
                                     <div class="form-group">
-                                        <input type="password" class="form-style" id="register-password" placeholder="Sua Senha" autocomplete="off">
+                                        <input type="password" class="form-style" id="register-password" placeholder="Sua Senha"
+                                            autocomplete="off">
                                         <i class="input-icon material-icons">lock</i>
                                     </div>
-
-                                    <!-- Mensagens de erro para Register -->
-                                    <p id="register-email-error" class="error-message">Este email já está registrado.</p>
-                                    <p id="register-password-error" class="error-message">Você precisa colocar uma senha com no mínimo 4 caracteres.</p>
-                                    <p id="register-email-invalid-error" class="error-message">Coloque um email válido, ex: blablabla@gmail.com.</p>
-
-                                    <a href="#" class="btn" id="submit-register">Register</a>
+                                    <!-- Mensagens de erro e sucesso para Register -->
+                                    <div id="register-error-message" class="error-message">Campo acima em branco.</div>
+                                    <div id="register-password-error-message" class="error-message">A senha deve ter entre 4 e 10 caracteres!</div>
+                                    <div id="register-email-error-message" class="error-message">O email deve ser do tipo @gmail.com</div>
+                                    <div id="register-general-success-message" class="error-message">Registro realizado com sucesso!</div>
+                                    <a href="#" class="btn" id="submit-register">Registrar</a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>    
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Barra Fixa Inferior -->
     <div class="fixed-bar">
         <a href="index.html" id="home-icon"><i class="material-icons">home</i></a>
         <a href="#" id="settings-icon"><i class="material-icons">settings</i></a>
     </div>
 
-    <!-- Tela de Configurações -->
-    <div class="settings-screen" id="settings-screen">
+    <div class="settings-screen" id="settings-screen" style="display: none;">
         <div class="settings-content">
             <h3>Configurações</h3>
-            <button id="clear-data">Apagar Dados do Usuário</button>
+            <button id="clear-data">🗑️ Apagar Dados do Usuário</button>
         </div>
     </div>
 
-    <!-- Script JS -->
-    <script src="script.js"></script>
+    <div class="success-screen" id="success-screen" style="display: none;">
+        <div class="success-content">
+            <h3 id="success-message">Dados apagados com sucesso!</h3>
+            <button id="ok-button">OK</button>
+        </div>
+    </div>
+
     <script>
-        // Exibir tela de configurações ao clicar no ícone de configurações
         document.getElementById("settings-icon").addEventListener("click", function () {
             document.getElementById("settings-screen").style.display = "flex";
         });
 
-        // Fechar a tela de configurações se clicar fora da área de conteúdo
         document.getElementById("settings-screen").addEventListener("click", function (event) {
             if (event.target === this) {
                 this.style.display = "none";
             }
         });
 
-        // Apagar dados do usuário
         document.getElementById("clear-data").addEventListener("click", function () {
             localStorage.removeItem("users");
-            alert("Dados do usuário apagados!");
             document.getElementById("settings-screen").style.display = "none";
+            document.getElementById("success-screen").style.display = "flex";
+        });
+
+        document.getElementById("ok-button").addEventListener("click", function () {
+            document.getElementById("success-screen").style.display = "none";
+        });
+
+        document.getElementById("submit-login").addEventListener("click", function (event) {
+            event.preventDefault();
+            const email = document.getElementById("login-email").value;
+            const password = document.getElementById("login-password").value;
+            let valid = true;
+
+            // Limpa as mensagens anteriores
+            document.getElementById("login-general-error-message").style.display = "none";
+            document.getElementById("login-error-message").style.display = "none";
+            document.getElementById("login-password-error-message").style.display = "none";
+            document.getElementById("login-email-error-message").style.display = "none";
+
+            if (!email || !password) {
+                document.getElementById("login-error-message").style.display = "block";
+                valid = false;
+            }
+
+            if (password.length < 4 || password.length > 10) {
+                document.getElementById("login-password-error-message").style.display = "block";
+                valid = false;
+            }
+
+            if (!email.includes("@gmail.com")) {
+                document.getElementById("login-email-error-message").style.display = "block";
+                valid = false;
+            }
+
+            if (!valid) return;
+
+            let users = JSON.parse(localStorage.getItem("users")) || [];
+            const user = users.find(user => user.email === email && user.password === password);
+
+            if (user) {
+                document.getElementById("login-success-message").innerText = "Logado com sucesso, tempo: 4";
+                document.getElementById("login-success-message").style.display = "block";
+
+                let countdown = 4;
+                const interval = setInterval(function () {
+                    countdown--;
+                    document.getElementById("login-success-message").innerText = `Logado com sucesso, tempo: ${countdown}`;
+                    if (countdown <= 0) {
+                        clearInterval(interval);
+                        window.location.href = "tela1.html"; // Redireciona para o outro site
+                    }
+                }, 1000);
+            } else {
+                document.getElementById("login-general-error-message").style.display = "block";
+            }
+        });
+
+        document.getElementById("submit-register").addEventListener("click", function (event) {
+            event.preventDefault();
+            const name = document.getElementById("register-name").value;
+            const email = document.getElementById("register-email").value;
+            const password = document.getElementById("register-password").value;
+            let valid = true;
+
+            // Limpa as mensagens anteriores
+            document.getElementById("register-error-message").style.display = "none";
+            document.getElementById("register-password-error-message").style.display = "none";
+            document.getElementById("register-email-error-message").style.display = "none";
+            document.getElementById("register-general-success-message").style.display = "none";
+
+            if (!name || !email || !password) {
+                document.getElementById("register-error-message").style.display = "block";
+                valid = false;
+            }
+
+            if (password.length < 4 || password.length > 10) {
+                document.getElementById("register-password-error-message").style.display = "block";
+                valid = false;
+            }
+
+            if (!email.includes("@gmail.com")) {
+                document.getElementById("register-email-error-message").style.display = "block";
+                valid = false;
+            }
+
+            if (!valid) return;
+
+            const user = { name, email, password };
+            let users = JSON.parse(localStorage.getItem("users")) || [];
+            users.push(user);
+            localStorage.setItem("users", JSON.stringify(users));
+
+            document.getElementById("register-general-success-message").style.display = "block";
         });
     </script>
 </body>
+
 </html>
