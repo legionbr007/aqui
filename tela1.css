@@ -13,6 +13,81 @@ body {
   background-image: url('/Imagens/paredeminutos.jpg');
   background-size: cover;
 }
+
+/*Botao Voltar*/
+
+.voltar-button {
+  position: absolute;
+  bottom: 1px;
+  left: 20px;
+  padding: 15px 30px;
+  font-size: 18px;
+  text-align: center;
+  color: white;
+  text-decoration: none;
+  background-color: #007bff;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: color 0.4s ease, background-color 0.3s ease;
+  cursor: pointer;
+  z-index: 10;
+  border: 2px solid #007bff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.voltar-button:hover {
+  color: #007bff;
+  background-color: white;
+  border-color: #007bff;
+}
+
+/* Efeito de Ondas RGB */
+.voltar-button::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  background: linear-gradient(45deg, red, blue, green, yellow);
+  background-size: 400% 400%;
+  animation: waveAnimation 2s ease-in-out infinite, gradientAnimation 5s ease infinite;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  z-index: -1;
+}
+
+/* Animação das ondas subindo e descendo */
+@keyframes waveAnimation {
+  0% {
+    top: -50%;
+  }
+  50% {
+    top: 0;
+  }
+  100% {
+    top: -50%;
+  }
+}
+
+/* Animação do gradiente RGB nas ondas */
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.voltar-button:active::after {
+  width: 0;
+  height: 0;
+  transition: all 0.4s ease;
+}
   
 .cronometro-container {
   text-align: center;
