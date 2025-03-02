@@ -344,12 +344,15 @@
 
     <div class="success-screen" id="success-screen" style="display: none;">
         <div class="success-content">
-            <h3 id="success-message">Dados apagados com sucesso!</h3>
-            <button id="ok-button">OK</button>
+            <h3 id="success-message">Apagando dados da conta: 10</h3>
+            <button id="ok-button">Cancelar</button>
         </div>
     </div>
 
     <script>
+        let countdownInterval;
+        let countdown = 10;
+
         document.getElementById("settings-icon").addEventListener("click", function () {
             document.getElementById("settings-screen").style.display = "flex";
         });
@@ -361,101 +364,30 @@
         });
 
         document.getElementById("clear-data").addEventListener("click", function () {
-            localStorage.removeItem("users");
-            document.getElementById("settings-screen").style.display = "none";
+            document.getElementById("success-message").innerText = `Apagando dados da conta: ${countdown}`;
             document.getElementById("success-screen").style.display = "flex";
+            document.getElementById("ok-button").innerText = "Cancelar";
+
+            countdownInterval = setInterval(function () {
+                countdown--;
+                document.getElementById("success-message").innerText = `Apagando dados da conta: ${countdown}`;
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    localStorage.removeItem("users");
+                    document.getElementById("success-message").innerText = "Dados apagados com sucesso!";
+                    document.getElementById("ok-button").innerText = "OK";
+                }
+            }, 1000);
         });
 
         document.getElementById("ok-button").addEventListener("click", function () {
-            document.getElementById("success-screen").style.display = "none";
-        });
-
-        document.getElementById("submit-login").addEventListener("click", function (event) {
-            event.preventDefault();
-            const email = document.getElementById("login-email").value;
-            const password = document.getElementById("login-password").value;
-            let valid = true;
-
-            // Limpa as mensagens anteriores
-            document.getElementById("login-general-error-message").style.display = "none";
-            document.getElementById("login-error-message").style.display = "none";
-            document.getElementById("login-password-error-message").style.display = "none";
-            document.getElementById("login-email-error-message").style.display = "none";
-
-            if (!email || !password) {
-                document.getElementById("login-error-message").style.display = "block";
-                valid = false;
-            }
-
-            if (password.length < 4 || password.length > 10) {
-                document.getElementById("login-password-error-message").style.display = "block";
-                valid = false;
-            }
-
-            if (!email.includes("@gmail.com")) {
-                document.getElementById("login-email-error-message").style.display = "block";
-                valid = false;
-            }
-
-            if (!valid) return;
-
-            let users = JSON.parse(localStorage.getItem("users")) || [];
-            const user = users.find(user => user.email === email && user.password === password);
-
-            if (user) {
-                document.getElementById("login-success-message").innerText = "Logado com sucesso, tempo: 4";
-                document.getElementById("login-success-message").style.display = "block";
-
-                let countdown = 4;
-                const interval = setInterval(function () {
-                    countdown--;
-                    document.getElementById("login-success-message").innerText = `Logado com sucesso, tempo: ${countdown}`;
-                    if (countdown <= 0) {
-                        clearInterval(interval);
-                        window.location.href = "tela1.html"; // Redireciona para o outro site
-                    }
-                }, 1000);
+            if (this.innerText === "Cancelar") {
+                clearInterval(countdownInterval); 
+                document.getElementById("success-screen").style.display = "none";
+                countdown = 10; 
             } else {
-                document.getElementById("login-general-error-message").style.display = "block";
+                document.getElementById("success-screen").style.display = "none"; 
             }
-        });
-
-        document.getElementById("submit-register").addEventListener("click", function (event) {
-            event.preventDefault();
-            const name = document.getElementById("register-name").value;
-            const email = document.getElementById("register-email").value;
-            const password = document.getElementById("register-password").value;
-            let valid = true;
-
-            // Limpa as mensagens anteriores
-            document.getElementById("register-error-message").style.display = "none";
-            document.getElementById("register-password-error-message").style.display = "none";
-            document.getElementById("register-email-error-message").style.display = "none";
-            document.getElementById("register-general-success-message").style.display = "none";
-
-            if (!name || !email || !password) {
-                document.getElementById("register-error-message").style.display = "block";
-                valid = false;
-            }
-
-            if (password.length < 4 || password.length > 10) {
-                document.getElementById("register-password-error-message").style.display = "block";
-                valid = false;
-            }
-
-            if (!email.includes("@gmail.com")) {
-                document.getElementById("register-email-error-message").style.display = "block";
-                valid = false;
-            }
-
-            if (!valid) return;
-
-            const user = { name, email, password };
-            let users = JSON.parse(localStorage.getItem("users")) || [];
-            users.push(user);
-            localStorage.setItem("users", JSON.stringify(users));
-
-            document.getElementById("register-general-success-message").style.display = "block";
         });
     </script>
 </body>
